@@ -3,152 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ላዝ ቢንጎ</title>
+    <title>ላዝ ቢንጎ - ሩም</title>
     <script src="https://telegram.org"></script>
     <style>
-        /* Cyberpunk / Neon Theme Styles */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #0d0e15;
             color: #00f0ff;
             margin: 0;
-            padding: 15px;
-            text-align: center;
+            padding: 10px;
         }
-        h1 {
-            color: #ff00ff;
-            text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
-            font-size: 28px;
-            margin-bottom: 5px;
+        
+        /* የደብተሩ የላይኛው ሳጥኖች (Header) */
+        .header-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            margin-bottom: 15px;
         }
-        .subtitle {
-            color: #00f0ff;
-            text-shadow: 0 0 8px #00f0ff;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        .stats-container {
-            background: rgba(255, 0, 255, 0.05);
+        .header-box {
+            background: #161925;
             border: 1px solid #ff00ff;
-            box-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-around;
-            font-size: 14px;
+            border-radius: 6px;
+            padding: 8px 2px;
+            text-align: center;
+            box-shadow: 0 0 5px rgba(255, 0, 255, 0.2);
         }
-        .stat-box span {
-            display: block;
-            color: #fff;
+        .box-title {
+            font-size: 11px;
+            color: #ff00ff;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .box-value {
+            font-size: 13px;
             font-weight: bold;
-            margin-top: 3px;
+            color: #fff;
         }
-        .board-title {
+
+        /* የመካከለኛው ትልቅ የካርቴላዎች ማውጫ ሳጥን */
+        .main-container {
+            background: rgba(0, 240, 255, 0.02);
+            border: 2px solid #00f0ff;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
+        }
+        .container-title {
+            font-size: 14px;
             color: #00f0ff;
-            font-size: 16px;
-            margin: 15px 0 5px 0;
+            margin-bottom: 10px;
+            font-weight: bold;
             text-align: left;
         }
-        .bingo-letters {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 5px;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #ff00ff;
-            text-shadow: 0 0 5px #ff00ff;
+
+        /* የካርቴላዎች ዝርዝር ረድፍ (List View) */
+        .cards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
         }
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 5px;
-            background: rgba(0, 240, 255, 0.05);
-            border: 1px solid #00f0ff;
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
-            border-radius: 10px;
-            padding: 8px;
-        }
-        .cell {
+        .card-row {
             background: #161925;
             border: 1px solid rgba(0, 240, 255, 0.3);
-            color: #fff;
-            border-radius: 5px;
-            padding: 15px 0;
+            border-radius: 6px;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .card-row:active {
+            background: #ff00ff;
+            border-color: #ff00ff;
+            transform: scale(0.98);
+        }
+        .card-number {
             font-size: 16px;
             font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .cell:active {
-            transform: scale(0.95);
-        }
-        .cell.marked {
-            background: #ff00ff;
             color: #fff;
-            border-color: #ff00ff;
-            box-shadow: 0 0 10px #ff00ff;
-            text-decoration: line-through;
         }
-        .btn-bingo {
-            background: linear-gradient(45deg, #ff00ff, #00f0ff);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            padding: 12px 40px;
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 25px;
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
-            width: 80%;
+        .card-status {
+            font-size: 12px;
+            color: #00f0ff;
+            background: rgba(0, 240, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .card-row:active .card-status {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.2);
         }
     </style>
 </head>
 <body>
 
-    <h1>🎰 ላዝ ቢንጎ 🎰</h1>
-    <div class="subtitle">ደራሽ 88 ETB | ታክስ 20%</div>
-
-    <div class="stats-container">
-        <div class="stat-box">የወጡ ቁጥሮች <span>🔴 0/75</span></div>
-        <div class="stat-box">ተጫዋቾች <span>👥 12</span></div>
+    <!-- የላይኛው የመረጃ ሳጥኖች ክፍል -->
+    <div class="header-grid">
+        <div class="header-box">
+            <div class="box-title">Room</div>
+            <div class="box-value">አዲስ ሩም</div>
+        </div>
+        <div class="header-box">
+            <div class="box-title">Sold</div>
+            <div class="box-value">00</div>
+        </div>
+        <div class="header-box">
+            <div class="box-title">Time</div>
+            <div class="box-value">3:05</div>
+        </div>
+        <div class="header-box">
+            <div class="box-title">Balance</div>
+            <div class="box-value">0.00</div>
+        </div>
     </div>
 
-    <div class="board-title">💳 የእርስዎ የጨዋታ ካርቴላ</div>
-    <div class="bingo-letters">
-        <div>B</div><div>I</div><div>N</div><div>G</div><div>O</div>
+    <!-- የመካከለኛው የካርቴላዎች ማውጫ ክፍል -->
+    <div class="main-container">
+        <div class="container-title">📋 የካርቴላዎች ማውጫ (1 - 200)</div>
+        <div class="cards-list" id="cardsList">
+            <!-- የካርቴላ ረድፎች በጃቫስክሪፕት እዚህ ይገባሉ -->
+        </div>
     </div>
-    
-    <div class="grid-container" id="cardGrid"></div>
-
-    <button class="btn-bingo" onclick="checkBingo()">🏆 ቢንጎ! (አሸነፍኩ) 🏆</button>
 
     <script>
-        const grid = document.getElementById('cardGrid');
-        const ranges = [
-            {min: 1, max: 15}, {min: 16, max: 30}, {min: 31, max: 45}, {min: 46, max: 60}, {min: 61, max: 75}
-        ];
-
-        for (let i = 0; i < 5; i++) {
-            for (let j = 0; j < 5; j++) {
-                const cell = document.createElement('div');
-                cell.className = 'cell';
-                if (i === 2 && j === 2) {
-                    cell.innerText = 'FREE';
-                    cell.classList.add('marked');
-                } else {
-                    const range = ranges[j];
-                    const num = Math.floor(Math.random() * (range.max - range.min + 1)) + range.min;
-                    cell.innerText = num;
-                    cell.onclick = function() { cell.classList.toggle('marked'); };
-                }
-                grid.appendChild(cell);
-            }
-        }
-
-        function checkBingo() {
-            alert('የአሸናፊነት ማረጋገጫ ጥያቄዎ ለዳኛ ተልኳል!');
+        const cardsList = document.getElementById('cardsList');
+        
+        // ከ 1 እስከ 200 የካርቴላ ረድፎችን በቅደም ተከተል መፍጠር
+        for (let i = 1; i <= 200; i++) {
+            const row = document.createElement('div');
+            row.className = 'card-row';
+            
+            // የካርቴላ ቁጥር እና ሁኔታ መፍጠሪያ
+            row.innerHTML = `
+                <div class="card-number">ካርቴላ ቁጥር ${i}</div>
+                <div class="card-status">ክፈት 🎰</div>
+            `;
+            
+            // ተጫዋቹ ረድፉን ሲነካ ወደ ጨዋታው ሰሌዳ የሚወስድ ተግባር
+            row.onclick = function() {
+                // እዚህ ላይ ወደ ጨዋታው ገጽ የመክፈት ወይም የማስተላለፍ ተግባር መጻፍ ይቻላል
+                alert(`ካርቴላ ቁጥር ${i} እየተከፈተ ነው...`);
+            };
+            
+            cardsList.appendChild(row);
         }
     </script>
 </body>
