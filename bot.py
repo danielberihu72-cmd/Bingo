@@ -3,7 +3,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppI
 from telegram.ext import Application, CommandHandler, ContextTypes
 
 # 1. እዚህ ቦታ ላይ ከቦት ፋዘር (BotFather) ያገኘኸውን የቦት ቶክን (Token) አስገባ
-BOT_TOKEN = "የአንተን_ቦት_ቶክን_እዚህ_ተካ"
+BOT_TOKEN = "8890812636:AAEwPZLy55HCVLVo1MtCaViQLW1IxpWOkx8"
 
 # የላዝ ቢንጎ ዌብሳይት ሊንክህ
 WEB_APP_URL = "https://github.io"
