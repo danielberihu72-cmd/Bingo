@@ -13,21 +13,13 @@ if (!token) {
 const bot = new Telegraf(token);
 const app = express();
 const PORT = process.env.PORT || 3000;
-const RENDER_URL = "https://onrender.com";
 
-app.use(express.json());
-
-// ሬንደር ሰርቨሩ መስራቱን ለመፈተሽ
+// ሬንደር ፖርት ሲፈትሽ ዝም ብሎ እንዲያልፍ
 app.get('/', (req, res) => {
   res.send('ላዝ ቢንጎ ቦት በሰላም እየሰራ ነው! 🚀');
 });
 
-// የቴሌግራም መልዕክቶችን በዌብሁክ መቀበያ መስመር
-app.post(`/bot${token}`, (req, res) => {
-  bot.handleUpdate(req.body);
-  res.sendStatus(200);
-});
-
+// 1. ተጫዋቹ /start ሲል
 bot.start((ctx) => {
   const firstName = ctx.from.first_name || "ተጫዋች";
   ctx.reply(
@@ -38,6 +30,7 @@ bot.start((ctx) => {
   );
 });
 
+// 2. ተጫዋቹ ስልክ ሲያጋራ (የ Play ቁልፍ ማምጫ)
 bot.on('contact', async (ctx) => {
   await ctx.reply(
     `✅ ምዝገባዎ ተጠናቋል!\n\nየዲሞ አካውንትዎ ላይ 500 ብር ተጭኗል። አሁን '🎮 ጨዋታ ጀምር (Play)' የሚለውን ቁልፍ ተጭነው ወደ ቢንጎ አዳራሽ መግባት ይችላሉ።`,
@@ -47,15 +40,20 @@ bot.on('contact', async (ctx) => {
   );
 });
 
-// ሰርቨሩ ሲነሳ ዌብሁኩን በራስ-ሰር ቴሌግራም ላይ ያስረዋል
+// ሰርቨሩን እና ቦቱን በፖሊንግ ማስተናገድ
 app.listen(PORT, async () => {
   console.log(`ሰርቨሩ በፖርት ${PORT} ላይ ተነስቷል`);
   try {
-    // የቀድሞውን ዌብሁክ አጥፍቶ በአዲስ መልክ ያገናኛል
+    // የቀድሞውን የተበላሸ ዌብሁክ ሙሉ በሙሉ ያጠፋል
     await bot.telegram.deleteWebhook();
-    await bot.telegram.setWebhook(`${RENDER_URL}/bot${token}`);
-    console.log('🔗 ቴሌግራም ዌብሁክ በራስ-ሰር በተሳካ ሁኔታ ተገናኝቷል!');
+    
+    // ቦቱን በቀጥታ እና ፈጣን በሆነው Polling ያስነሳል
+    bot.launch();
+    console.log('🚀 ቦቱ በፈጣኑ የ Polling ማስተላለፊያ ስራ ጀምሯል!');
   } catch (err) {
-    console.error('ዌብሁክ ማገናኘት አልተቻለም:', err);
+    console.error('ስህተት አጋጥሟል:', err);
   }
 });
+
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));
