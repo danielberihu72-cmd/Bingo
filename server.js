@@ -1,4 +1,5 @@
 const { Telegraf, Markup } = require('telegraf');
+const express = require('express'); 
 require('dotenv').config();
 
 const token = process.env.BOT_TOKEN;
@@ -10,6 +11,13 @@ if (!token) {
 }
 
 const bot = new Telegraf(token);
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// ሬንደር ፖርት ሲፈትሽ ይህንን ጽሑፍ ያገኛል (በፍጹም አይዘጋም)
+app.get('/', (req, res) => {
+  res.send('ላዝ ቢንጎ ቦት በሰላም እየሰራ ነው! 🚀');
+});
 
 bot.start((ctx) => {
   const firstName = ctx.from.first_name || "ተጫዋች";
@@ -33,8 +41,13 @@ bot.on('contact', async (ctx) => {
   );
 });
 
-bot.launch().then(() => {
-  console.log('🚀 የላዝ ቢንጎ ቴሌግራም ቦት በተሳካ ሁኔታ ስራ ጀምሯል!');
+// መጀመሪያ የሬንደርን ፖርት እናስነሳ
+app.listen(PORT, () => {
+  console.log(`ሰርቨሩ በፖርት ${PORT} ላይ ተነስቷል`);
+  // ከዚያ ቦቱን እናስነሳ
+  bot.launch().then(() => {
+    console.log('🚀 የላዝ ቢንጎ ቴሌግራም ቦት በተሳካ ሁኔታ ስራ ጀምሯል!');
+  });
 });
 
 process.once('SIGINT', () => bot.stop('SIGINT'));
