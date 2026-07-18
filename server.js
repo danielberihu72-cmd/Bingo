@@ -13,13 +13,11 @@ if (!token) {
 const bot = new Telegraf(token);
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// የሬንደርን ሰርቨር ሊንክ እዚህ ጋር በራስ-ሰር ዌብሁክ እናስረው
 const RENDER_URL = "https://onrender.com";
 
 app.use(express.json());
 
-// ሬንደር ፖርት ሲፈትሽ ይህንን ጽሑፍ ያገኛል
+// ሬንደር ሰርቨሩ መስራቱን ለመፈተሽ
 app.get('/', (req, res) => {
   res.send('ላዝ ቢንጎ ቦት በሰላም እየሰራ ነው! 🚀');
 });
@@ -41,7 +39,6 @@ bot.start((ctx) => {
 });
 
 bot.on('contact', async (ctx) => {
-  // ስልኩን ሲያጋራ ቀጥታ የ Play ቁልፍን ያመጣል
   await ctx.reply(
     `✅ ምዝገባዎ ተጠናቋል!\n\nየዲሞ አካውንትዎ ላይ 500 ብር ተጭኗል። አሁን '🎮 ጨዋታ ጀምር (Play)' የሚለውን ቁልፍ ተጭነው ወደ ቢንጎ አዳራሽ መግባት ይችላሉ።`,
     Markup.keyboard([
@@ -54,6 +51,8 @@ bot.on('contact', async (ctx) => {
 app.listen(PORT, async () => {
   console.log(`ሰርቨሩ በፖርት ${PORT} ላይ ተነስቷል`);
   try {
+    // የቀድሞውን ዌብሁክ አጥፍቶ በአዲስ መልክ ያገናኛል
+    await bot.telegram.deleteWebhook();
     await bot.telegram.setWebhook(`${RENDER_URL}/bot${token}`);
     console.log('🔗 ቴሌግራም ዌብሁክ በራስ-ሰር በተሳካ ሁኔታ ተገናኝቷል!');
   } catch (err) {
