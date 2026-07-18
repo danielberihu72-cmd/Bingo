@@ -14,12 +14,11 @@ const bot = new Telegraf(token);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ሬንደር ፖርት ሲፈትሽ ዝም ብሎ እንዲያልፍ
 app.get('/', (req, res) => {
   res.send('ላዝ ቢንጎ ቦት በሰላም እየሰራ ነው! 🚀');
 });
 
-// 1. ተጫዋቹ /start ሲል
+// 1. ተጫዋቹ /start ሲል "Share Contact" ብቻ ያመጣል (Play እዚህ ላይ አይመጣም)
 bot.start((ctx) => {
   const firstName = ctx.from.first_name || "ተጫዋች";
   ctx.reply(
@@ -30,29 +29,23 @@ bot.start((ctx) => {
   );
 });
 
-// 2. ተጫዋቹ ስልክ ሲያጋራ (የ Play ቁልፍ ማምጫ)
+// 2. ተጫዋቹ ስልኩን በትክክል ሲያጋራ ብቻ የ "Play" ቁልፍ ይመጣል
 bot.on('contact', async (ctx) => {
+  const contact = ctx.message.contact;
+  console.log(`ተመዘገበ: ID: ${contact.user_id}, ስም: ${contact.first_name}, ስልክ: ${contact.phone_number}`);
+
   await ctx.reply(
-    `✅ ምዝገባዎ ተጠናቋል!\n\nየዲሞ አካውንትዎ ላይ 500 ብር ተጭኗል። አሁን '🎮 ጨዋታ ጀምር (Play)' የሚለውን ቁልፍ ተጭነው ወደ ቢንጎ አዳራሽ መግባት ይችላሉ።`,
+    `✅ ምзовая ቁጥርዎ ተመዝግቧል!\n\nየዲሞ አካውንትዎ ላይ 500 ብር ተጭኗል። አሁን '🎮 ጨዋታ ጀምር (Play)' የሚለውን ቁልፍ ተጭነው ወደ ቢንጎ አዳራሽ መግባት ይችላሉ።`,
     Markup.keyboard([
       [Markup.button.webApp('🎮 ጨዋታ ጀምር (Play)', webAppUrl)]
     ]).resize()
   );
 });
 
-// ሰርቨሩን እና ቦቱን በፖሊንግ ማስተናገድ
-app.listen(PORT, async () => {
+app.listen(PORT, () => {
   console.log(`ሰርቨሩ በፖርት ${PORT} ላይ ተነስቷል`);
-  try {
-    // የቀድሞውን የተበላሸ ዌብሁክ ሙሉ በሙሉ ያጠፋል
-    await bot.telegram.deleteWebhook();
-    
-    // ቦቱን በቀጥታ እና ፈጣን በሆነው Polling ያስነሳል
-    bot.launch();
-    console.log('🚀 ቦቱ በፈጣኑ የ Polling ማስተላለፊያ ስራ ጀምሯል!');
-  } catch (err) {
-    console.error('ስህተት አጋጥሟል:', err);
-  }
+  bot.launch();
+  console.log('🚀 ቦቱ በፈጣኑ Polling ስራ ጀምሯል!');
 });
 
 process.once('SIGINT', () => bot.stop('SIGINT'));
