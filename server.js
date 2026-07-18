@@ -1,14 +1,9 @@
 const { Telegraf, Markup } = require('telegraf');
 const express = require('express'); 
-require('dotenv').config();
 
-const token = process.env.BOT_TOKEN;
-const webAppUrl = process.env.WEBAPP_URL || "https://vercel.app";
-
-if (!token) {
-  console.error("Error: BOT_TOKEN missing!");
-  process.exit(1);
-}
+// የሬንደርን ሴቲንግ ሳንጠብቅ ያንተን Token እዚህ ጋር በቀጥታ አሸግነው
+const token = "8945829634:AAHv-dRcPiQwgBJjOYHvZsyW_aaq4rwRWls";
+const webAppUrl = "https://vercel.app";
 
 const bot = new Telegraf(token);
 const app = express();
@@ -18,7 +13,7 @@ app.get('/', (req, res) => {
   res.send('Laz Bingo Bot is online!');
 });
 
-// 1. ተጫዋቹ /start ሲል ስልክ ቁጥር ማጋሪያ ብቻ ያመጣል
+// 1. ተጫዋቹ /start ሲል
 bot.start((ctx) => {
   const firstName = ctx.from.first_name || "ተጫዋች";
   ctx.reply(
@@ -29,7 +24,7 @@ bot.start((ctx) => {
   );
 });
 
-// 2. ስልኩን ሲያጋራ ብቻ የ Play ቁልፍ ያመጣል
+// 2. ስልኩን ሲያጋራ የ Play ቁልፍ ማምጫ
 bot.on('contact', async (ctx) => {
   await ctx.reply(
     `✅ ምዝገባዎ ተጠናቋል!\n\nየዲሞ አካውንትዎ ላይ 500 ብር ተጭኗል። አሁን ከታች ያለውን የጨዋታ ጀምር ቁልፍ ተጭነው መግባት ይችላሉ።`,
@@ -42,12 +37,12 @@ bot.on('contact', async (ctx) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   
-  // የቀድሞውን ዌብሁክ አጥፍቶ በፖሊንግ ያስነሳል
+  // ዌብሁክን አጥፍቶ በፖሊንግ በሃይል ማስነሳት
   bot.telegram.deleteWebhook().then(() => {
     bot.launch();
     console.log('🚀 Laz Bingo Bot started successfully!');
   }).catch((err) => {
-    console.error('Webhook delete error:', err);
+    console.error('Webhook error:', err);
     bot.launch();
   });
 });
