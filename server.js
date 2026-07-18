@@ -3,7 +3,7 @@ const express = require('express');
 
 // የሬንደርን ሴቲንግ ሳንጠብቅ ያንተን Token እዚህ ጋር በቀጥታ አሸግነው
 const token = "8945829634:AAHv-dRcPiQwgBJjOYHvZsyW_aaq4rwRWls";
-const webAppUrl = "https://vercel.app";
+const webAppUrl = "laz-bingo-frontend.vercel.app";
 
 const bot = new Telegraf(token);
 const app = express();
