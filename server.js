@@ -3,7 +3,7 @@ const express = require('express');
 require('dotenv').config();
 
 const token = process.env.BOT_TOKEN;
-const webAppUrl = process.env.WEBAPP_URL || "https://google.com";
+const webAppUrl = process.env.WEBAPP_URL || "https://vercel.app";
 
 if (!token) {
   console.error("ስህተት: BOT_TOKEN አልተገኘም!");
@@ -14,9 +14,20 @@ const bot = new Telegraf(token);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ሬንደር ፖርት ሲፈትሽ ይህንን ጽሑፍ ያገኛል (በፍጹም አይዘጋም)
+// የሬንደርን ሰርቨር ሊንክ እዚህ ጋር በራስ-ሰር ዌብሁክ እናስረው
+const RENDER_URL = "https://onrender.com";
+
+app.use(express.json());
+
+// ሬንደር ፖርት ሲፈትሽ ይህንን ጽሑፍ ያገኛል
 app.get('/', (req, res) => {
   res.send('ላዝ ቢንጎ ቦት በሰላም እየሰራ ነው! 🚀');
+});
+
+// የቴሌግራም መልዕክቶችን በዌብሁክ መቀበያ መስመር
+app.post(`/bot${token}`, (req, res) => {
+  bot.handleUpdate(req.body);
+  res.sendStatus(200);
 });
 
 bot.start((ctx) => {
@@ -30,9 +41,7 @@ bot.start((ctx) => {
 });
 
 bot.on('contact', async (ctx) => {
-  const contact = ctx.message.contact;
-  console.log(`ተመዘገበ: ID: ${contact.user_id}, ስም: ${contact.first_name}, ስልክ: ${contact.phone_number}`);
-
+  // ስልኩን ሲያጋራ ቀጥታ የ Play ቁልፍን ያመጣል
   await ctx.reply(
     `✅ ምዝገባዎ ተጠናቋል!\n\nየዲሞ አካውንትዎ ላይ 500 ብር ተጭኗል። አሁን '🎮 ጨዋታ ጀምር (Play)' የሚለውን ቁልፍ ተጭነው ወደ ቢንጎ አዳራሽ መግባት ይችላሉ።`,
     Markup.keyboard([
@@ -41,14 +50,13 @@ bot.on('contact', async (ctx) => {
   );
 });
 
-// መጀመሪያ የሬንደርን ፖርት እናስነሳ
-app.listen(PORT, () => {
+// ሰርቨሩ ሲነሳ ዌብሁኩን በራስ-ሰር ቴሌግራም ላይ ያስረዋል
+app.listen(PORT, async () => {
   console.log(`ሰርቨሩ በፖርት ${PORT} ላይ ተነስቷል`);
-  // ከዚያ ቦቱን እናስነሳ
-  bot.launch().then(() => {
-    console.log('🚀 የላዝ ቢንጎ ቴሌግራም ቦት በተሳካ ሁኔታ ስራ ጀምሯል!');
-  });
+  try {
+    await bot.telegram.setWebhook(`${RENDER_URL}/bot${token}`);
+    console.log('🔗 ቴሌግራም ዌብሁክ በራስ-ሰር በተሳካ ሁኔታ ተገናኝቷል!');
+  } catch (err) {
+    console.error('ዌብሁክ ማገናኘት አልተቻለም:', err);
+  }
 });
-
-process.once('SIGINT', () => bot.stop('SIGINT'));
-process.once('SIGTERM', () => bot.stop('SIGTERM'));
