@@ -2,8 +2,8 @@ require('dotenv').config();
 const { Telegraf, Markup } = require('telegraf');
 const express = require('express');
 
-// እውነተኛውን ሙሉ የቦት ቶክን እዚህ አስገባ
-const token = "8945829634:AAHv-dRcPiQwgBJjOYHvZsyW_aaq4rv..."; 
+// 🔴 ወሳኝ ማስተካከያ፡ ሙሉውን ቶክን ያለ ምንም የሦስት ነጥብ (...) ስህተት እዚህ በትዕምርተ ጥቅስ ውስጥ አስገባ
+const token = "8945829634:AAHv-dRcPiQwgBJjOYHvZsyW_aaq4rwRWls"; 
 const webAppUrl = "https://vercel.app"; 
 
 const bot = new Telegraf(token);
@@ -45,7 +45,7 @@ bot.on('contact', async (ctx) => {
 
     await ctx.reply(
         '✅ ምዝገባዎ ተጠናቋል!\n\nየመመዝገቢያ አካውንትዎ ላይ የ 500 ብር ቦነስ ተጨምሯል፣ አሁን መጫወት ይችላሉ።',
-        Markup.removeKeyboard() // የስልክ ቁጥር ማጋሪያ ቁልፉን ያጠፋል
+        Markup.removeKeyboard() 
     );
 
     sendPlayButton(ctx);
@@ -66,7 +66,7 @@ app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
-// 🔴 ዋናው ማስተካከያ፡ የድሮ ዌብሁክ አጥፍቶ ቦቱን 100% በአስተማማኝ ሁኔታ ማስነሻ
+// የድሮ ዌብሁክ አጥፍቶ ቦቱን በፖሊንግ የማስነሻ አስተማማኝ መንገድ
 bot.telegram.deleteWebhook().then(() => {
     bot.launch().then(() => {
         console.log('🎰 Laz Bingo Bot started successfully!');
@@ -77,6 +77,5 @@ bot.telegram.deleteWebhook().then(() => {
     console.error('Webhook delete error:', err);
 });
 
-// ሰርቨሩ ሲዘጋ ቦቱ በአግባቡ እንዲቆም
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
