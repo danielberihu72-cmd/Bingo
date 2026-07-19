@@ -3,7 +3,7 @@ const { Telegraf, Markup } = require('telegraf');
 const express = require('express');
 
 // የቦት ቶክን እና የVercel ዌብ አፕ ሊንክ
-const token = "8945829634:AAHv-dRcPiQwgBJjOYHvZsyW_aaq4rv..."; 
+const token = "8945829634:AAHv-dRcPiQwgBJjOYHvZsyW_aaq4rwRWls"; 
 const webAppUrl = "https://vercel.app"; 
 
 const bot = new Telegraf(token);
