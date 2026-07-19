@@ -28,7 +28,7 @@ bot.start((ctx) => {
     } else {
         // አዲስ ከሆነ ስልክ ቁጥር ይጠይቃል
         ctx.reply(
-            `እንኳን ወደ ላኪ ቢንጎ በሰላም መጡ፣ ${firstName}! 👋\n\nለመቀጠል እባክዎ መጀመሪያ ስልክ ቁጥርዎን ያጋሩ።`,
+            `እንኳን ወደ ላዝ ቢንጎ በሰላም መጡ፣ ${firstName}! 👋\n\nለመቀጠል እባክዎ መጀመሪያ ስልክ ቁጥርዎን ያጋሩ።`,
             Markup.keyboard([
                 [Markup.button.contactRequest('📱 ስልክ ቁጥር ያጋሩ (Share)')]
             ]).oneTime().resize()
